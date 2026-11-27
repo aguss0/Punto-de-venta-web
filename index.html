@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Punto de Venta · El sistema de caja para tu comercio</title>
+<meta name="description" content="Sistema de punto de venta para Windows: vendé con lector de códigos, cobrá con varios medios de pago, facturá con ARCA, cargá remitos con una foto y recibí el resumen del día por mail. Funciona sin internet.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23F5D547'/%3E%3Cpath d='M5 12V6h6l8 8-6 6-8-8z' fill='none' stroke='%230F4A37' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#0F4A37;
+  --forest-2:#0B3A2B;
+  --leaf:#1F7A57;
+  --mint:#E4EFE8;
+  --mint-2:#D3E6DA;
+  --paper:#FBFDFB;
+  --ink:#13201A;
+  --ink-2:#4A5C53;
+  --tag:#F5D547;
+  --tag-ink:#3B2F00;
+  --warn:#D9751F;
+  --bad:#C23B2B;
+  --display:"Bricolage Grotesque", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --wrap:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--body);color:var(--ink);background:var(--paper);font-size:18px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--tag);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
+h1,h2,h3{font-family:var(--display);line-height:1.02;margin:0;letter-spacing:-.02em}
+h2{font-size:clamp(2.1rem,4.4vw,3.4rem);font-weight:800;max-width:18ch}
+h3{font-size:1.45rem;font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+.lead{font-size:1.2rem;color:var(--ink-2);max-width:56ch}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- Botones: etiqueta de precio ---------- */
+.btn{display:inline-flex;align-items:center;gap:.6em;font:700 1.05rem/1 var(--body);text-decoration:none;border:0;cursor:pointer;padding:1em 1.4em;border-radius:10px;transition:transform .15s ease, box-shadow .15s ease}
+.btn-tag{background:var(--tag);color:var(--tag-ink);position:relative;padding-left:2.1em;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%);border-radius:0 10px 10px 0;box-shadow:0 2px 0 #c9ab1f}
+.btn-tag::before{content:"";position:absolute;left:16px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:var(--forest)}
+.btn-tag:hover{transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px currentColor}
+.btn-ghost:hover{background:rgba(255,255,255,.08)}
+
+/* ---------- Navegación ---------- */
+.nav{position:absolute;inset:0 0 auto 0;z-index:5}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:84px}
+.brand{display:flex;align-items:center;gap:.6rem;font:800 1.25rem var(--display);color:var(--paper);text-decoration:none}
+.brand-mark{width:34px;height:34px;border-radius:8px;background:var(--tag);display:grid;place-items:center;color:var(--forest)}
+.nav ul{display:flex;gap:1.8rem;list-style:none;margin:0;padding:0}
+.nav ul a{color:#CFE3D8;text-decoration:none;font-weight:700;font-size:.98rem}
+.nav ul a:hover{color:#fff}
+@media (max-width:860px){.nav ul{display:none}}
+
+/* ---------- Hero ---------- */
+.hero{background:var(--forest);color:var(--paper);padding:140px 0 120px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:28px;background:
+  radial-gradient(circle at 14px 0,transparent 13px,var(--paper) 14px) 0 0/28px 28px repeat-x}
+.hero-grid{display:grid;grid-template-columns:1fr 1.08fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(3rem,7vw,5.6rem);font-weight:800;letter-spacing:-.035em;line-height:.95}
+.hero h1 span{display:block}
+.hero .lead{color:#C4DCCF;margin-top:1.6rem}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-top:2.2rem}
+.hero-facts{display:flex;flex-wrap:wrap;gap:10px 22px;margin:2.4rem 0 0;padding:0;list-style:none;color:#B5D2C2;font-size:.95rem}
+.hero-facts li{display:flex;align-items:center;gap:.5em}
+.hero-facts svg{color:var(--tag);flex:none}
+@media (max-width:980px){.hero-grid{grid-template-columns:1fr}.hero{padding-top:120px}}
+
+/* ---------- Demo de caja ---------- */
+.demo{position:relative;padding-bottom:40px}
+.win{background:#F3F6F2;border-radius:14px;color:var(--ink);box-shadow:0 30px 60px -20px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;position:relative;font-size:15px}
+.win-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-bottom:1px solid #E1E8E3}
+.win-title{font:700 1.05rem var(--display);color:var(--forest)}
+.win-title small{display:block;font:400 .72rem var(--body);color:var(--ink-2)}
+.win-user{font-size:.8rem;color:var(--ink-2)}
+.win-body{padding:14px;display:grid;grid-template-columns:1fr 190px;gap:12px}
+.search{grid-column:1/-1;background:#fff;border:1px solid #DCE5DF;border-radius:10px;padding:10px 12px;position:relative}
+.search label{display:block;font-weight:700;font-size:.78rem;color:var(--forest);margin-bottom:6px}
+.search-field{display:flex;align-items:center;gap:8px;border:1px solid #CBD8D0;border-radius:8px;padding:8px 10px;min-height:38px;font-size:.95rem}
+.search-field .caret{width:2px;height:18px;background:var(--leaf);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.suggest{position:absolute;left:12px;right:12px;top:calc(100% - 8px);background:#fff;border:1px solid #CBD8D0;border-radius:8px;box-shadow:0 12px 24px -10px rgba(0,0,0,.25);z-index:3;display:none}
+.suggest.show{display:block}
+.suggest div{display:flex;justify-content:space-between;padding:8px 10px;background:var(--mint);border-radius:7px;font-size:.88rem}
+.suggest small{color:var(--ink-2)}
+.cart{background:#fff;border:1px solid #DCE5DF;border-radius:10px;padding:12px;min-height:236px}
+.cart h4{margin:0 0 8px;font:700 1rem var(--display);color:var(--forest)}
+.cart table{width:100%;border-collapse:collapse;font-size:.84rem}
+.cart th{text-align:left;font-weight:700;color:var(--ink-2);font-size:.72rem;padding:4px 4px;border-bottom:1px solid #E5ECE7}
+.cart td{padding:7px 4px;border-bottom:1px solid #EEF2EF;vertical-align:top}
+.cart td.num,.cart th.num{text-align:right;white-space:nowrap}
+.cart tr.new td{animation:rowIn .5s ease}
+@keyframes rowIn{from{background:#FFF6C9}to{background:transparent}}
+.promo-pill{display:inline-block;background:var(--tag);color:var(--tag-ink);font-size:.68rem;font-weight:700;padding:1px 6px;border-radius:4px;margin-left:4px}
+.cart-empty{color:var(--ink-2);text-align:center;padding:40px 0;font-size:.9rem}
+.side{background:#fff;border:1px solid #DCE5DF;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.side .sub{font-size:.78rem;color:var(--ink-2)}
+.total-box{background:var(--mint);border-radius:8px;padding:10px}
+.total-box span{font-size:.7rem;color:var(--ink-2)}
+.total-box strong{display:block;font:800 1.55rem var(--display);color:var(--forest);font-variant-numeric:tabular-nums}
+.pay-btn{margin-top:auto;background:var(--leaf);color:#fff;border:0;border-radius:8px;padding:12px;font:700 1rem var(--body);cursor:pointer}
+.pay-btn:disabled{background:#A8C2B6;cursor:not-allowed}
+.pay-btn.pressed{transform:scale(.96);background:var(--forest)}
+.modal{position:absolute;inset:0;background:rgba(15,74,55,.35);display:none;place-items:center;z-index:4}
+.modal.show{display:grid}
+.modal-card{background:#fff;border-radius:12px;padding:18px;width:min(320px,90%);box-shadow:0 20px 40px -10px rgba(0,0,0,.35)}
+.modal-card h4{margin:0 0 10px;font:700 1.1rem var(--display);color:var(--forest)}
+.pay-row{display:grid;grid-template-columns:1fr 1.3fr;gap:8px;align-items:center;margin:6px 0;font-size:.88rem}
+.pay-row .in{border:1px solid #CBD8D0;border-radius:6px;padding:6px 8px;text-align:right;font:inherit;font-variant-numeric:tabular-nums;min-height:32px;width:100%;box-sizing:border-box;background:#fff;color:inherit}
+.pay-row .in:focus{outline:2px solid var(--forest);outline-offset:1px;border-color:transparent}
+.pay-row .in::placeholder{color:#9AA8A0}
+.status{margin:12px 0;padding:8px 10px;border-radius:8px;font-weight:700;font-size:.9rem;background:#FCEBD9;color:#8A4510}
+.status.ok{background:var(--mint);color:var(--forest)}
+.status.err{background:#FBE0DC;color:#9B2C1F}
+.status.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media (prefers-reduced-motion:reduce){.status.shake{animation:none}}
+.modal-card .pay-btn{width:100%}
+.demo-hint{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px;font-size:.9rem;color:#C4DCCF}
+.chip{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font:700 .85rem var(--body);cursor:pointer}
+.chip:hover{background:rgba(255,255,255,.2)}
+.chip.reset{background:transparent;border-style:dashed}
+kbd{font-family:var(--mono);font-size:.8em;background:rgba(255,255,255,.14);border-radius:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.25)}
+
+/* ---------- El ticket (pieza estrella) ---------- */
+.win-wrap{position:relative}
+.printer{position:absolute;right:-30px;top:118px;width:262px;z-index:6;pointer-events:none;opacity:0;transition:opacity .25s}
+.printer.on{opacity:1;pointer-events:auto}
+.printer-slot{height:14px;background:#0A2A1F;border-radius:7px;box-shadow:inset 0 3px 4px rgba(0,0,0,.6)}
+.demo-hint{padding-right:250px}
+.receipt-clip{overflow:hidden;margin:-7px 12px 0;}
+.receipt{background:#fff;color:#222;font:400 11px/1.45 var(--mono);padding:16px 14px 22px;transform:translateY(-102%);transition:transform 2.2s steps(22,end);position:relative;
+  -webkit-mask:radial-gradient(circle at 6px 100%,transparent 5px,#000 5.5px) 0 0/12px 100% repeat-x;
+          mask:radial-gradient(circle at 6px 100%,transparent 5px,#000 5.5px) 0 0/12px 100% repeat-x;box-shadow:0 10px 20px rgba(0,0,0,.25)}
+.receipt.out{transform:translateY(0)}
+.receipt .c{text-align:center}
+.receipt .b{font-weight:700}
+.receipt .hr{border-top:1px dashed #999;margin:6px 0}
+.receipt .r{display:flex;justify-content:space-between;gap:6px}
+.receipt .big{font-size:14px;font-weight:700}
+@media (max-width:1240px){.printer{right:-8px}}
+@media (max-width:980px){.printer{position:relative;right:auto;top:auto;margin:-10px auto 0;display:none}.printer.on{display:block}.demo-hint{padding-right:0}}
+@media (max-width:560px){.win-body{grid-template-columns:1fr}.win{font-size:14px}}
+
+/* ---------- Secciones ---------- */
+section{padding:110px 0}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:56px}
+@media (max-width:860px){.sec-head{grid-template-columns:1fr}}
+
+/* Un día en el mostrador */
+.day{background:var(--paper)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:3px solid var(--forest);list-style:none;padding:0;margin:0}
+.steps button{all:unset;cursor:pointer;display:block;padding:18px 16px 18px 0;position:relative;width:100%;box-sizing:border-box}
+.steps button::before{content:"";position:absolute;top:-9px;left:0;width:15px;height:15px;border-radius:50%;background:var(--paper);border:3px solid var(--forest)}
+.steps button[aria-selected="true"]::before{background:var(--tag)}
+.steps .n{font:800 .9rem var(--display);color:var(--leaf)}
+.steps .t{display:block;font:700 1.15rem/1.15 var(--display);margin-top:4px}
+.steps button[aria-selected="true"] .t{color:var(--forest);text-decoration:underline;text-decoration-color:var(--tag);text-decoration-thickness:4px;text-underline-offset:5px}
+.steps button:focus-visible{outline:3px solid var(--leaf)}
+.step-panel{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:40px;min-height:300px}
+.step-panel[hidden]{display:none}
+.step-panel p{color:var(--ink-2);margin-top:14px;max-width:48ch}
+.step-panel ul{margin:18px 0 0;padding-left:1.1em;color:var(--ink-2)}
+.step-panel li{margin:6px 0}
+@media (max-width:860px){.steps{grid-template-columns:1fr 1fr;row-gap:10px}.step-panel{grid-template-columns:1fr}}
+.mock{background:#fff;border:1px solid var(--mint-2);border-radius:14px;padding:22px;box-shadow:0 18px 40px -24px rgba(15,74,55,.45)}
+.mock .row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #EEF2EF;font-size:.95rem}
+.mock .row:last-child{border-bottom:0}
+.mock .row b{font-variant-numeric:tabular-nums}
+.mock .k{font:800 2rem var(--display);color:var(--forest)}
+.mock .diff{display:inline-block;margin-top:10px;background:var(--mint);color:var(--forest);font-weight:700;padding:4px 10px;border-radius:6px}
+.mail{font-size:.95rem}
+.mail .from{color:var(--ink-2);font-size:.85rem;border-bottom:1px solid #EEF2EF;padding-bottom:10px;margin-bottom:12px}
+.mail .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.mail .kpis div{background:var(--mint);border-radius:8px;padding:10px}
+.mail .kpis b{display:block;font:800 1.15rem var(--display);color:var(--forest)}
+.mail .kpis span{font-size:.78rem;color:var(--ink-2)}
+
+/* Funciones destacadas */
+.features{background:var(--mint)}
+.feat{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center;padding:56px 0;border-top:1px solid var(--mint-2)}
+.feat > *{min-width:0}
+.feat:first-of-type{border-top:0;padding-top:0}
+.feat.flip > :first-child{order:2}
+.feat p{color:var(--ink-2);margin-top:14px;max-width:46ch}
+.feat .fine{font-size:.88rem;margin-top:12px}
+@media (max-width:900px){.feat{grid-template-columns:1fr;gap:32px}.feat.flip > :first-child{order:0}}
+
+/* Remito */
+.ocr{display:grid;grid-template-columns:.75fr 1.25fr;gap:16px;align-items:start}
+.grid-ocr td:not(:first-child),.grid-ocr th:not(:first-child){white-space:nowrap;text-align:right}
+@media (max-width:560px){.ocr{grid-template-columns:1fr}}
+.paper{background:#FFFEF7;border:1px solid #E6E2CF;border-radius:6px;padding:14px;font:400 12px/1.6 var(--mono);color:#3A3A3A;transform:rotate(-2.2deg);position:relative;overflow:hidden;box-shadow:0 10px 20px -12px rgba(0,0,0,.3)}
+.paper .h{font-weight:700;border-bottom:1px solid #CCC;margin-bottom:6px}
+.scanline{position:absolute;left:0;right:0;height:3px;background:var(--leaf);box-shadow:0 0 14px 4px rgba(31,122,87,.5);top:-10px;opacity:0}
+.paper.scanning .scanline{animation:scan 1.6s ease-in-out forwards}
+@keyframes scan{0%{top:0;opacity:1}100%{top:100%;opacity:1}}
+.grid-ocr{background:#fff;border-radius:10px;border:1px solid var(--mint-2);overflow:hidden;font-size:.86rem}
+.grid-ocr table{width:100%;border-collapse:collapse}
+.grid-ocr th{background:#F3F6F2;text-align:left;padding:8px;font-size:.75rem;color:var(--ink-2)}
+.grid-ocr td{padding:8px;border-top:1px solid #EEF2EF}
+.grid-ocr tr.ok td:first-child{box-shadow:inset 4px 0 var(--leaf)}
+.grid-ocr tr.name td:first-child{box-shadow:inset 4px 0 var(--warn)}
+.grid-ocr tr.miss td:first-child{box-shadow:inset 4px 0 var(--bad)}
+.grid-ocr tr.name{background:#FDF1E5}
+.grid-ocr tr.miss{background:#FBE7E4}
+.grid-ocr .empty td{color:var(--ink-2);text-align:center;padding:36px 8px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:.85rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.act{margin-top:16px;background:var(--forest);color:#fff;border:0;border-radius:8px;padding:12px 18px;font:700 1rem var(--body);cursor:pointer}
+.act:hover{background:var(--leaf)}
+
+/* Promos */
+.promo{background:#fff;border-radius:14px;padding:22px;border:1px solid var(--mint-2)}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.seg button{border:1px solid var(--mint-2);background:#fff;border-radius:999px;padding:8px 14px;font:700 .9rem var(--body);cursor:pointer;color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--forest);color:#fff;border-color:var(--forest)}
+.qty{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.qty button{width:40px;height:40px;border-radius:10px;border:1px solid var(--mint-2);background:var(--mint);font:800 1.2rem var(--display);cursor:pointer;color:var(--forest)}
+.qty output{font:800 1.6rem var(--display);min-width:2ch;text-align:center}
+.calc .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #DDE6E0;font-variant-numeric:tabular-nums}
+.calc .row.disc{color:var(--bad)}
+.calc .row.tot{border:0;font:800 1.4rem var(--display);color:var(--forest);padding-top:12px}
+
+/* Factura */
+.inv-wrap{display:flex;justify-content:center}
+.invoice{width:280px;background:#fff;font:400 11.5px/1.5 var(--mono);color:#222;padding:20px 18px 26px;box-shadow:0 20px 40px -18px rgba(0,0,0,.35);transform:rotate(1.5deg);
+  -webkit-mask:radial-gradient(circle at 6px 100%,transparent 5px,#000 5.5px) 0 0/12px 100% repeat-x;mask:radial-gradient(circle at 6px 100%,transparent 5px,#000 5.5px) 0 0/12px 100% repeat-x}
+.invoice .c{text-align:center}.invoice .b{font-weight:700}
+.invoice .r{display:flex;justify-content:space-between}
+.invoice .hr{border-top:1px dashed #999;margin:7px 0}
+.invoice .letter{display:inline-grid;place-items:center;width:34px;height:34px;border:2px solid #222;font-size:20px;font-weight:700;margin:4px auto}
+.qr{width:96px;height:96px;margin:10px auto 4px}
+
+/* Estadísticas */
+.stats{background:#fff;border-radius:14px;padding:22px;border:1px solid var(--mint-2)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:200px;margin-top:10px;border-bottom:2px solid var(--ink)}
+.bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;position:relative}
+.bar i{display:block;width:100%;background:var(--leaf);border-radius:4px 4px 0 0;transition:height .5s cubic-bezier(.2,.8,.2,1)}
+.bar.top i{background:var(--forest)}
+.bar em{font-style:normal;font-size:.72rem;color:var(--ink-2);position:absolute;bottom:-22px;white-space:nowrap}
+.bar b{font-size:.72rem;color:var(--forest);margin-bottom:4px;font-variant-numeric:tabular-nums}
+.stats-note{margin-top:34px;font-size:.88rem;color:var(--ink-2)}
+
+/* Permisos por cuenta */
+h2{text-wrap:balance}
+.perm{display:grid;grid-template-columns:220px 1fr 1fr;background:#fff;border:1px solid var(--mint-2);border-radius:16px;overflow:hidden;box-shadow:0 24px 50px -30px rgba(15,74,55,.5)}
+.perm-col{padding:22px}
+.perm-col + .perm-col{border-left:1px solid var(--mint-2)}
+.perm h3{font-size:1.05rem;margin-bottom:14px;color:var(--forest)}
+.acc{display:block;width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;font:700 1rem var(--body);color:var(--ink)}
+.acc small{display:block;font-weight:400;font-size:.8rem;color:var(--ink-2)}
+.acc[aria-pressed="true"]{background:var(--mint);box-shadow:inset 4px 0 var(--forest)}
+.acc:hover{background:#F1F6F3}
+.always{font-size:.88rem;color:var(--ink-2);background:#F3F6F2;border-radius:8px;padding:10px 12px;margin-bottom:12px}
+.check{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid #EEF2EF;cursor:pointer}
+.check:last-of-type{border-bottom:0}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--leaf);cursor:pointer}
+.check b{display:block;font-size:.98rem}
+.check span{font-size:.84rem;color:var(--ink-2)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{border-radius:10px;padding:14px 12px;font:700 .98rem var(--display);background:var(--forest);color:#fff;transition:opacity .2s, transform .2s}
+.tile small{display:block;font:400 .78rem var(--body);color:#BFD9CB;margin-top:3px}
+.tile.lock{background:#F3F6F2;color:#8A9A92;border:1px dashed #C5D3CB}
+.tile.lock small{color:#8A9A92}
+.extras{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;min-height:30px}
+.extras span{background:var(--tag);color:var(--tag-ink);font-size:.8rem;font-weight:700;padding:4px 9px;border-radius:6px}
+.perm-foot{margin-top:18px;font-size:.92rem;color:var(--ink-2)}
+@media (max-width:980px){.perm{grid-template-columns:1fr}.perm-col + .perm-col{border-left:0;border-top:1px solid var(--mint-2)}.accs{display:flex;gap:8px;flex-wrap:wrap}.acc{width:auto}}
+
+/* Confianza */
+.trust{background:var(--forest);color:var(--paper)}
+.trust h2{color:#fff}
+.trust .lead{color:#C4DCCF}
+.trust dl{display:grid;grid-template-columns:repeat(2,1fr);gap:40px 64px;margin:0}
+.trust dt{font:700 1.35rem var(--display);display:flex;gap:12px;align-items:center}
+.trust dt svg{color:var(--tag);flex:none}
+.trust dd{margin:10px 0 0 40px;color:#C4DCCF;max-width:44ch}
+@media (max-width:760px){.trust dl{grid-template-columns:1fr}}
+
+/* FAQ + CTA */
+.faq details{border-bottom:1px solid var(--mint-2);padding:20px 0}
+.faq summary{cursor:pointer;font:700 1.25rem var(--display);list-style:none;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:1.6rem;line-height:1;color:var(--leaf);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin-top:12px;color:var(--ink-2);max-width:70ch}
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px}
+@media (max-width:860px){.faq-grid{grid-template-columns:1fr}}
+.cta{background:var(--tag);color:var(--tag-ink);padding:96px 0;position:relative}
+.cta::before{content:"";position:absolute;inset:0 0 auto 0;height:28px;background:radial-gradient(circle at 14px 28px,transparent 13px,var(--tag) 14px) 0 0/28px 28px repeat-x;transform:translateY(-27px)}
+.cta .wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center}
+.cta h2{max-width:16ch;color:var(--forest-2)}
+.cta p{margin-top:16px;max-width:46ch}
+.cta-actions{display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+.cta .btn-main{background:var(--forest);color:#fff;font-size:1.15rem;padding:1.1em 1.6em}
+.cta .btn-main:hover{background:var(--forest-2)}
+.cta .btn-ghost{color:var(--forest)}
+@media (max-width:860px){.cta .wrap{grid-template-columns:1fr}}
+footer{background:var(--forest-2);color:#9FBFAF;padding:36px 0;font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Punto de Venta, inicio">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8L3 12z"/><circle cx="7.5" cy="8.5" r="1.5" fill="currentColor"/></svg>
+      </span>
+      Punto de Venta
+    </a>
+    <nav aria-label="Secciones">
+      <ul>
+        <li><a href="#dia">Cómo funciona</a></li>
+        <li><a href="#funciones">Funciones</a></li>
+        <li><a href="#seguridad">Tus datos</a></li>
+        <li><a href="#preguntas">Preguntas</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<!-- ================= HERO ================= -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div>
+      <h1 id="hero-title"><span>Escaneás,</span><span>cobrás,</span><span>listo.</span></h1>
+      <p class="lead">El sistema de caja para tu almacén, dietética o kiosco. Vendé con el lector de códigos, aplicá promos sin hacer cuentas, facturá con ARCA y cerrá la caja sabiendo exactamente cuánto tiene que haber.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-tag" href="#contacto">Pedir una demo</a>
+        <a class="btn btn-ghost" href="#dia">Ver cómo funciona</a>
+      </div>
+      <ul class="hero-facts">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>Funciona sin internet</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>Sin abono mensual a terceros</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12l5 5L20 7"/></svg>Para Windows 10 y 11</li>
+      </ul>
+    </div>
+
+    <div class="demo" aria-label="Demostración interactiva de una venta">
+      <div class="win-wrap">
+      <div class="win" id="win">
+        <div class="win-bar">
+          <div class="win-title">Punto de venta<small>Dietética La Hoja · Caja</small></div>
+          <div class="win-user">Atiende: Lucía</div>
+        </div>
+        <div class="win-body">
+          <div class="search">
+            <label for="fake-search">Buscar por nombre o leer código</label>
+            <div class="search-field" id="fake-search" role="textbox" aria-readonly="true"><span id="typed"></span><span class="caret" aria-hidden="true"></span></div>
+            <div class="suggest" id="suggest"><div><span id="sug-name"></span><small id="sug-price"></small></div></div>
+          </div>
+          <div class="cart">
+            <h4>Venta actual</h4>
+            <table>
+              <thead><tr><th>Producto</th><th class="num">Cant.</th><th class="num">Total</th></tr></thead>
+              <tbody id="cart-body"></tbody>
+            </table>
+            <div class="cart-empty" id="cart-empty">Escaneá un producto para empezar.</div>
+          </div>
+          <div class="side">
+            <div class="sub">Subtotal: <span id="subtotal">$ 0,00</span></div>
+            <div class="sub">Descuentos: <span id="disc">$ 0,00</span></div>
+            <div class="total-box"><span>Total a cobrar</span><strong id="total" aria-live="polite">$ 0,00</strong></div>
+            <button class="pay-btn" id="pay" disabled>Cobrar · F8</button>
+          </div>
+        </div>
+        <div class="modal" id="modal" role="dialog" aria-modal="false" aria-labelledby="modal-title">
+          <div class="modal-card">
+            <h4 id="modal-title">Cobro · <span id="m-total"></span></h4>
+            <label class="pay-row"><span>Efectivo</span><input class="in" id="m-cash" data-pay="cash" inputmode="decimal" autocomplete="off" placeholder="0,00"></label>
+            <label class="pay-row"><span>Débito</span><input class="in" id="m-debit" data-pay="debit" inputmode="decimal" autocomplete="off" placeholder="0,00"></label>
+            <label class="pay-row"><span>Transferencia</span><input class="in" id="m-transfer" data-pay="transfer" inputmode="decimal" autocomplete="off" placeholder="0,00"></label>
+            <div class="status" id="m-status">Falta cobrar</div>
+            <button class="pay-btn" id="confirm">Confirmar cobro · F8</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="printer" id="printer" aria-live="polite">
+        <div class="printer-slot" aria-hidden="true"></div>
+        <div class="receipt-clip"><div class="receipt" id="receipt"></div></div>
+      </div>
+      </div>
+
+      <div class="demo-hint">
+        <span>Probala:</span>
+        <button class="chip" data-add="yerba">Yerba 1 kg</button>
+        <button class="chip" data-add="almendras">Almendras</button>
+        <button class="chip" data-add="galletitas">Galletitas 3×2</button>
+        <button class="chip" data-add="aceite">Aceite de oliva</button>
+        <span>y apretá <kbd>F8</kbd></span>
+        <button class="chip reset" id="reset">Nueva venta</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= UN DÍA ================= -->
+<section class="day" id="dia" aria-labelledby="dia-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="dia-title">Un día de mostrador, de punta a punta</h2>
+      <p class="lead">Desde que levantás la persiana hasta que te llega el resumen al celular. Tocá cada paso.</p>
+    </div>
+
+    <div class="steps" role="tablist" aria-label="Pasos del día">
+      <button role="tab" aria-selected="true" aria-controls="p1" id="t1"><span class="n">1</span><span class="t">Abrís la caja</span></button>
+      <button role="tab" aria-selected="false" aria-controls="p2" id="t2" tabindex="-1"><span class="n">2</span><span class="t">Vendés</span></button>
+      <button role="tab" aria-selected="false" aria-controls="p3" id="t3" tabindex="-1"><span class="n">3</span><span class="t">Cobrás</span></button>
+      <button role="tab" aria-selected="false" aria-controls="p4" id="t4" tabindex="-1"><span class="n">4</span><span class="t">Cerrás la caja</span></button>
+      <button role="tab" aria-selected="false" aria-controls="p5" id="t5" tabindex="-1"><span class="n">5</span><span class="t">Te llega el resumen</span></button>
+    </div>
+
+    <div class="step-panel" role="tabpanel" id="p1" aria-labelledby="t1">
+      <div>
+        <h3>Cargás el efectivo inicial y arrancás</h3>
+        <p>Cada vendedor entra con su usuario, o elige quién atiende desde la cuenta compartida del mostrador. Todas las ventas y movimientos quedan a nombre de quien los hizo.</p>
+        <ul><li>Si quedó abierta la caja de ayer, te pide contarla y cerrarla primero.</li><li>Retiros e ingresos de efectivo con motivo: pago a proveedor, cambio, lo que sea.</li></ul>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <div class="row"><span>Apertura</span><b>Hoy, 08:57 · Lucía</b></div>
+        <div class="row"><span>Efectivo inicial</span><b>$ 25.000,00</b></div>
+        <div class="row"><span>Retiro · pago a proveedor</span><b>− $ 18.500,00</b></div>
+        <div class="row"><span>Ingreso · cambio</span><b>$ 10.000,00</b></div>
+      </div>
+    </div>
+
+    <div class="step-panel" role="tabpanel" id="p2" aria-labelledby="t2" hidden>
+      <div>
+        <h3>Buscás o escaneás, y Enter</h3>
+        <p>Escribís parte del nombre o pasás el lector. Aparecen sugerencias con precio y stock; las elegís con las flechas. Si escaneás un código que no conoce, lo vinculás a un artículo o creás uno en el momento.</p>
+        <ul><li>Por unidad, por kilo o por litro: la cantidad se carga en gramos o ml.</li><li>Promos, packs y combos se aplican solos.</li></ul>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <div class="row"><span>Almendras peladas</span><b>250 g · $ 4.600,00</b></div>
+        <div class="row"><span>Galletitas de arroz <span class="promo-pill">3×2</span></span><b>3 · $ 2.400,00</b></div>
+        <div class="row"><span>Yerba mate suave 1 kg</span><b>1 · $ 4.850,00</b></div>
+        <div class="row"><span>Mix frutos secos</span><b>300 g · $ 4.260,00</b></div>
+      </div>
+    </div>
+
+    <div class="step-panel" role="tabpanel" id="p3" aria-labelledby="t3" hidden>
+      <div>
+        <h3>Combinás medios de pago sin calculadora</h3>
+        <p>Efectivo, débito, crédito y transferencia en la misma venta. Cada medio tiene un botón «Completar» que llena lo que falta, y el vuelto sale solo del efectivo.</p>
+        <ul><li>Elegís nota de pedido o factura de ARCA en el mismo cobro.</li><li>Si se corta internet, la venta se guarda igual y la factura se emite después.</li></ul>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <div class="row"><span>Total</span><b>$ 16.110,00</b></div>
+        <div class="row"><span>Débito</span><b>$ 10.000,00</b></div>
+        <div class="row"><span>Efectivo</span><b>$ 10.000,00</b></div>
+        <div class="row"><span>Vuelto en efectivo</span><b>$ 3.890,00</b></div>
+      </div>
+    </div>
+
+    <div class="step-panel" role="tabpanel" id="p4" aria-labelledby="t4" hidden>
+      <div>
+        <h3>Contás el efectivo y el sistema hace la cuenta</h3>
+        <p>Ingresás lo que contaste y ves al instante la diferencia contra lo esperado. Al cerrar, se guarda un respaldo automático.</p>
+        <ul><li>Historial de cierres con quién abrió, quién cerró y cada diferencia.</li><li>Las correcciones piden motivo y quedan registradas con el antes y el después.</li></ul>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <div class="row"><span>Esperado en caja</span><b>$ 187.420,00</b></div>
+        <div class="row"><span>Contado</span><b>$ 187.400,00</b></div>
+        <div class="k">− $ 20,00</div>
+        <span class="diff">Diferencia del día</span>
+      </div>
+    </div>
+
+    <div class="step-panel" role="tabpanel" id="p5" aria-labelledby="t5" hidden>
+      <div>
+        <h3>Si no estuviste en el local, igual te enterás</h3>
+        <p>Al cerrar con «Fin del día», le llega un mail al dueño con lo vendido, los medios de pago y la caja. Los domingos suma la semana; el último día del mes, el mes completo con una planilla de todas las ventas.</p>
+        <ul><li>Sin internet, el mail queda en espera y sale solo cuando vuelve la conexión.</li></ul>
+      </div>
+      <div class="mock mail" aria-hidden="true">
+        <div class="from">De: Punto de Venta · Para: el dueño<br><b>Resumen del día · Dietética La Hoja</b></div>
+        <div class="kpis">
+          <div><b>$ 412.380</b><span>Vendido</span></div>
+          <div><b>87</b><span>Ventas</span></div>
+          <div><b>$ 4.740</b><span>Ticket promedio</span></div>
+        </div>
+        <div class="row"><span>Efectivo</span><b>$ 162.420,00</b></div>
+        <div class="row"><span>Débito y crédito</span><b>$ 171.960,00</b></div>
+        <div class="row"><span>Transferencia</span><b>$ 78.000,00</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FUNCIONES ================= -->
+<section class="features" id="funciones" aria-labelledby="func-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="func-title">Lo que te ahorra horas cada semana</h2>
+      <p class="lead">Cuatro tareas que en la mayoría de los comercios se hacen a mano. Acá las podés probar.</p>
+    </div>
+
+    <!-- Remito -->
+    <div class="feat">
+      <div>
+        <h3>Cargá la mercadería con una foto del remito</h3>
+        <p>Le sacás una foto al remito del proveedor (o subís el PDF o la planilla) y el sistema lee cantidades, códigos y precios. Vos revisás, confirmás, y el stock se suma.</p>
+        <p class="fine">Usa el reconocimiento de texto de Windows, sin conexión. Recuerda los códigos de cada proveedor para el próximo remito y no deja cargar dos veces el mismo.</p>
+      </div>
+      <div>
+        <div class="ocr">
+          <div class="paper" id="paper" aria-hidden="true">
+            <div class="scanline"></div>
+            <div class="h">DISTRIBUIDORA DEL SUR<br>REMITO 0003-00018842</div>
+            Cant Cód Descripción<br>
+            12 &nbsp;Y110 Yerba suave 1kg<br>
+            5kg A220 Almendras pel.<br>
+            24 &nbsp;G031 Galletitas arroz<br>
+            6 &nbsp;&nbsp;T900 Té rojo x20<br>
+          </div>
+          <div class="grid-ocr">
+            <table>
+              <thead><tr><th>Artículo</th><th>Cant.</th><th>Costo</th></tr></thead>
+              <tbody id="ocr-body"><tr class="empty"><td colspan="3">Tocá «Leer remito»</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+        <button class="act" id="read-remito">Leer remito</button>
+        <div class="legend"><span><i style="background:var(--leaf)"></i>Código conocido</span><span><i style="background:var(--warn)"></i>Asociado por nombre: revisar</span><span><i style="background:var(--bad)"></i>No encontrado</span></div>
+      </div>
+    </div>
+
+    <!-- Promos -->
+    <div class="feat flip">
+      <div>
+        <h3>Promos que se aplican solas</h3>
+        <p>Porcentaje, segunda unidad con descuento o llevás 3 pagás 2. Las configurás una vez y el sistema elige el mejor descuento para cada artículo, sin acumular y sin errores de cuenta en el mostrador.</p>
+        <p class="fine">También armás combos y mixes con su propio precio: al venderlos se descuenta el stock de cada componente.</p>
+      </div>
+      <div class="promo">
+        <div class="seg" role="group" aria-label="Tipo de promoción">
+          <button aria-pressed="true" data-promo="3x2">Llevás 3, pagás 2</button>
+          <button aria-pressed="false" data-promo="2da">2.ª unidad al 50%</button>
+          <button aria-pressed="false" data-promo="pct">15% off</button>
+        </div>
+        <div class="qty">
+          <button id="q-minus" aria-label="Quitar una unidad">−</button>
+          <output id="q-out" aria-live="polite">3</output>
+          <button id="q-plus" aria-label="Agregar una unidad">+</button>
+          <span>Galletitas de arroz · $ 1.200,00 c/u</span>
+        </div>
+        <div class="calc" id="calc"></div>
+      </div>
+    </div>
+
+    <!-- Factura -->
+    <div class="feat">
+      <div>
+        <h3>Factura electrónica de ARCA, directo desde la caja</h3>
+        <p>Factura A, B o C según tu condición fiscal, con CAE, vencimiento y el QR obligatorio, impresa en la comandera. Si anulás una venta facturada, la nota de crédito sale sola.</p>
+        <p class="fine">Conexión directa con los servicios de ARCA, sin intermediarios ni abonos. Si se corta la conexión en medio de una factura, al reintentar recupera el número en vez de duplicarlo.</p>
+      </div>
+      <div class="inv-wrap" aria-hidden="true">
+        <div class="invoice">
+          <div class="c b">DIETÉTICA LA HOJA</div>
+          <div class="c">CUIT 20-00000000-0 · Monotributo</div>
+          <div class="c"><span class="letter">C</span></div>
+          <div class="c b">FACTURA · 0004-00000731</div>
+          <div class="c">Consumidor final</div>
+          <div class="hr"></div>
+          <div class="r"><span>1 Yerba suave 1 kg</span><span>4.850,00</span></div>
+          <div class="r"><span>0,250 Almendras</span><span>4.600,00</span></div>
+          <div class="r"><span>3 Galletitas arroz</span><span>3.600,00</span></div>
+          <div class="r"><span>&nbsp;&nbsp;Promo 3×2</span><span>-1.200,00</span></div>
+          <div class="hr"></div>
+          <div class="r b"><span>TOTAL</span><span>$ 11.850,00</span></div>
+          <div class="hr"></div>
+          <div>CAE 76123456789012</div>
+          <div>Vto. CAE 07/12/2026</div>
+          <svg class="qr" id="qr" viewBox="0 0 25 25" shape-rendering="crispEdges"></svg>
+          <div class="c">Comprobante de ejemplo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="feat flip">
+      <div>
+        <h3>Sabé a qué hora se vende y qué se vende</h3>
+        <p>Total vendido, ticket promedio y descuentos otorgados comparados contra el período anterior. Gráficos por día, por horario, por vendedor, por medio de pago, por categoría y los artículos más vendidos.</p>
+        <p class="fine">Y desde Artículos, subís precios por porcentaje a toda una categoría, o los importás desde la planilla de Excel del proveedor.</p>
+      </div>
+      <div class="stats">
+        <div class="seg" role="group" aria-label="Ver estadística">
+          <button aria-pressed="true" data-stat="hora">Por horario</button>
+          <button aria-pressed="false" data-stat="pago">Por medio de pago</button>
+          <button aria-pressed="false" data-stat="top">Más vendidos</button>
+        </div>
+        <div class="bars" id="bars" role="img" aria-label="Gráfico de ventas"></div>
+        <p class="stats-note" id="stats-note"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROLES ================= -->
+<section class="roles" aria-labelledby="roles-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="roles-title">Vos decidís qué puede hacer cada uno</h2>
+      <p class="lead">Cada comercio organiza distinto a su gente. Habilitás cada tarea con un tilde, cuenta por cuenta: a tu encargado le dejás cargar precios pero no anular ventas, y al mostrador solo cobrar. Tocá los tildes.</p>
+    </div>
+    <div class="perm">
+      <div class="perm-col">
+        <h3>Cuentas</h3>
+        <div class="accs" role="group" aria-label="Elegir cuenta">
+          <button class="acc" aria-pressed="true" data-acc="enc">Martín<small>Encargado · cuenta personal</small></button>
+          <button class="acc" aria-pressed="false" data-acc="mos">Mostrador<small>Cuenta compartida · elige quién atiende</small></button>
+        </div>
+      </div>
+      <div class="perm-col">
+        <h3 id="perm-title">Qué puede hacer Martín</h3>
+        <p class="always">Todas las cuentas venden, abren y cierran la caja y ven el resumen de ventas.</p>
+        <div id="checks" role="group" aria-labelledby="perm-title"></div>
+      </div>
+      <div class="perm-col">
+        <h3>Así ve el inicio</h3>
+        <div class="tiles" id="tiles" aria-live="polite"></div>
+        <div class="extras" id="extras"></div>
+      </div>
+    </div>
+    <p class="perm-foot">Las cuentas, la facturación de ARCA, la impresora, los respaldos, el mail al dueño y la configuración quedan siempre para el administrador: no se pueden habilitar a otra cuenta. El sistema revisa el permiso en cada operación: no alcanza con encontrar el botón.</p>
+  </div>
+</section>
+
+<!-- ================= CONFIANZA ================= -->
+<section class="trust" id="seguridad" aria-labelledby="trust-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 id="trust-title">Tu negocio queda en tu computadora</h2>
+      <p class="lead">No dependés de un servidor ajeno ni de que ande internet para seguir vendiendo.</p>
+    </div>
+    <dl>
+      <div>
+        <dt><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.6a10 10 0 0 1 14 0M8.5 16.4a5 5 0 0 1 7 0"/><path d="M3 3l18 18"/></svg>Se corta internet y seguís vendiendo</dt>
+        <dd>Todo funciona sin conexión. Solo la factura de ARCA y el mail necesitan internet, y quedan pendientes hasta que vuelva.</dd>
+      </div>
+      <div>
+        <dt><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Los datos son tuyos</dt>
+        <dd>Ventas, stock y clientes se guardan en la PC del local, separados del programa. Reinstalar o actualizar no los borra.</dd>
+      </div>
+      <div>
+        <dt><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/></svg>Respaldo en cada cierre</dt>
+        <dd>Cada cierre de caja guarda un respaldo automático, y podés guardar copias en un pendrive. Al recuperarlas, se verifica que estén sanas antes de usarlas.</dd>
+      </div>
+      <div>
+        <dt><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Nada se borra sin dejar rastro</dt>
+        <dd>Anulaciones y correcciones piden motivo y guardan quién, cuándo y qué cambió. Contraseñas cifradas y sin usuarios de fábrica.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ================= PREGUNTAS ================= -->
+<section class="faq" id="preguntas" aria-labelledby="faq-title">
+  <div class="wrap faq-grid">
+    <div>
+      <h2 id="faq-title">Preguntas antes de arrancar</h2>
+    </div>
+    <div>
+      <details>
+        <summary>¿Qué necesito para instalarlo?</summary>
+        <p>Una PC con Windows 10 (versión 1809 o posterior) o Windows 11. El instalador trae todo lo necesario: no hay que instalar nada más ni usar el navegador.</p>
+      </details>
+      <details>
+        <summary>¿Sirve para mi rubro?</summary>
+        <p>Está pensado para comercios de mostrador: dietéticas, almacenes, kioscos, despensas. Vende por unidad, por kilo y por litro, y podés crear tus propias unidades, como docena o bolsa de 5 kg.</p>
+      </details>
+      <details>
+        <summary>¿Puedo limitar lo que hace cada empleado?</summary>
+        <p>Sí. Desde Cuentas de acceso tildás qué puede hacer cada cuenta: artículos y precios, stock, proveedores, correcciones de caja, anular ventas, estadísticas y vendedores. Lo cambiás cuando quieras, y la configuración del sistema queda siempre solo para vos.</p>
+      </details>
+      <details>
+        <summary>¿Funciona con mi lector de códigos y mi comandera?</summary>
+        <p>Cualquier lector de códigos de barras que funcione como teclado sirve. Los tickets salen en impresoras térmicas de 80 mm o 58 mm, y podés imprimir un ticket de prueba antes de empezar.</p>
+      </details>
+      <details>
+        <summary>¿Puedo facturar como monotributista?</summary>
+        <p>Sí. Como monotributista emitís Factura C; como responsable inscripto, A y B con el IVA discriminado por artículo. El sistema te guía para generar el certificado digital de ARCA.</p>
+      </details>
+      <details>
+        <summary>¿Puedo pasar mis artículos desde una planilla?</summary>
+        <p>Sí. Importás precios y artículos nuevos desde Excel o CSV: el sistema reconoce las columnas y te muestra una vista previa con los cambios antes de aplicarlos.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta" id="contacto" aria-labelledby="cta-title">
+  <div class="wrap">
+    <div>
+      <h2 id="cta-title">Probalo en tu mostrador</h2>
+      <p>Te lo instalamos, cargamos tus artículos desde tu planilla y te mostramos cómo funciona con tus propios productos.</p>
+    </div>
+    <div class="cta-actions">
+      <!-- TODO: reemplazar por el número real de WhatsApp (formato 549 + código de área + número) -->
+      <a class="btn btn-main" href="https://wa.me/5490000000000?text=Hola%2C%20quiero%20una%20demo%20del%20Punto%20de%20Venta">Escribinos por WhatsApp</a>
+      <!-- TODO: reemplazar por el mail de contacto real -->
+      <a class="btn btn-ghost" href="mailto:contacto@ejemplo.com?subject=Demo%20Punto%20de%20Venta">Escribinos por mail</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Punto de Venta · Sistema de caja para Windows</span>
+    <span>Los nombres, montos y comprobantes de esta página son ejemplos.</span>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const money = n => new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',minimumFractionDigits:2}).format(n).replace(/ /g,' ');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = s => document.querySelector(s);
+  const wait = ms => new Promise(r => setTimeout(r, reduced ? 0 : ms));
+
+  /* ---------------- Demo de caja ---------------- */
+  const P = {
+    yerba:{name:'Yerba mate suave 1 kg',short:'Yerba 1kg',price:4850,kind:'u',step:1,q:'yerba'},
+    almendras:{name:'Almendras peladas',short:'Almendras',price:18400,kind:'g',step:250,q:'almen'},
+    galletitas:{name:'Galletitas de arroz',short:'Galletitas',price:1200,kind:'u',step:1,promo:'3x2',q:'galle'},
+    aceite:{name:'Aceite de oliva 500 ml',short:'Aceite oliva',price:9300,kind:'u',step:1,q:'aceite'}
+  };
+  let cart = [], lastAdded = null, auto = true, ticketNo = 1234, busy = false;
+
+  const lineTotal = l => { const p = P[l.id]; return p.kind === 'g' ? Math.round(p.price * l.qty / 10) / 100 : p.price * l.qty; };
+  const lineDisc  = l => { const p = P[l.id]; return p.promo === '3x2' ? Math.floor(l.qty / 3) * p.price : 0; };
+  const totals = () => { const sub = cart.reduce((s,l)=>s+lineTotal(l),0), d = cart.reduce((s,l)=>s+lineDisc(l),0); return {sub, d, tot: sub - d}; };
+
+  function render(){
+    const body = $('#cart-body'); body.innerHTML = '';
+    cart.forEach(l => {
+      const p = P[l.id], tr = document.createElement('tr');
+      if (l.id === lastAdded) tr.className = 'new';
+      const qty = p.kind === 'g' ? l.qty + ' g' : l.qty;
+      const promo = lineDisc(l) ? '<span class="promo-pill">3×2</span>' : '';
+      tr.innerHTML = `<td>${p.name}${promo}</td><td class="num">${qty}</td><td class="num">${money(lineTotal(l) - lineDisc(l))}</td>`;
+      body.appendChild(tr);
+    });
+    $('#cart-empty').style.display = cart.length ? 'none' : 'block';
+    const t = totals();
+    $('#subtotal').textContent = money(t.sub);
+    $('#disc').textContent = money(t.d);
+    $('#total').textContent = money(t.tot);
+    $('#pay').disabled = !cart.length;
+  }
+
+  function add(id){
+    const l = cart.find(x => x.id === id);
+    if (l) l.qty += P[id].step; else cart.push({id, qty:P[id].step});
+    lastAdded = id; hideReceipt(); render();
+  }
+  function hideReceipt(){ $('#receipt').classList.remove('out'); $('#printer').classList.remove('on'); }
+
+  async function typeSearch(text, id){
+    const el = $('#typed'); el.textContent = '';
+    for (const ch of text){ el.textContent += ch; await wait(90); }
+    $('#sug-name').textContent = P[id].name;
+    $('#sug-price').textContent = P[id].kind === 'g' ? money(P[id].price) + ' /kg' : money(P[id].price);
+    $('#suggest').classList.add('show');
+    await wait(550);
+    $('#suggest').classList.remove('show'); el.textContent = '';
+  }
+
+  /* Cobro: los tres campos son editables, como en el programa. */
+  const payInputs = [...document.querySelectorAll('[data-pay]')];
+  const PAY_LABEL = {cash:'Efectivo', debit:'Débito', transfer:'Transferencia'};
+  let paying = false;
+  // Acepta "3000", "3.000", "3000,50" o "$ 3.000,50".
+  const parseMoney = s => {
+    let v = String(s).replace(/[^\d.,]/g, '');
+    if (v.includes(',')) v = v.replace(/\./g, '').replace(',', '.');
+    else if (/^\d{1,3}(\.\d{3})+$/.test(v)) v = v.replace(/\./g, '');
+    const n = parseFloat(v); return isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : 0;
+  };
+  const payments = () => Object.fromEntries(payInputs.map(i => [i.dataset.pay, parseMoney(i.value)]));
+  // Same rules as the real till: only cash gives change, and card/transfer can't exceed the total.
+  function payState(){
+    const t = totals(), p = payments(), electronic = p.debit + p.transfer, paid = p.cash + electronic;
+    if (electronic > t.tot) return {ok:false, cls:'status err', text:'Débito + transferencia no pueden superar el total'};
+    if (paid === 0) return {ok:true, empty:true, cls:'status', text:'Falta cobrar ' + money(t.tot)};
+    if (paid < t.tot) return {ok:false, cls:'status', text:'Falta cobrar ' + money(t.tot - paid)};
+    return {ok:true, cls:'status ok', text: paid === t.tot ? 'Pago exacto' : 'Vuelto ' + money(paid - t.tot), change: paid - t.tot};
+  }
+  function showPayState(){ const s = payState(), st = $('#m-status'); st.className = s.cls; st.textContent = s.text; return s; }
+  function openPay(focus){
+    if (!cart.length) return;
+    $('#m-total').textContent = money(totals().tot);
+    payInputs.forEach(i => i.value = '');
+    paying = false; showPayState();
+    $('#modal').classList.add('show');
+    if (focus) $('#m-cash').focus({preventScroll:true});
+  }
+  function closePay(){ $('#modal').classList.remove('show'); }
+  function setCash(v){ $('#m-cash').value = money(v).replace('$ ', ''); showPayState(); }
+  function printReceipt(p){
+    const t = totals(), now = new Date();
+    const d = now.toLocaleDateString('es-AR'), h = now.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
+    let rows = cart.map(l => {
+      const pr = P[l.id], q = pr.kind === 'g' ? (l.qty/1000).toFixed(3).replace('.',',') : l.qty;
+      let r = `<div class="r"><span>${q} ${pr.short}</span><span>${money(lineTotal(l)).replace('$ ','')}</span></div>`;
+      if (lineDisc(l)) r += `<div class="r"><span>&nbsp;&nbsp;Promo 3×2</span><span>-${money(lineDisc(l)).replace('$ ','')}</span></div>`;
+      return r;
+    }).join('');
+    const paid = Object.entries(p).filter(([,v]) => v > 0).map(([k,v]) => `<div class="r"><span>${PAY_LABEL[k]}</span><span>${money(v)}</span></div>`).join('');
+    const change = p.cash + p.debit + p.transfer - t.tot;
+    const rc = $('#receipt');
+    rc.classList.remove('out');
+    rc.innerHTML = `<div class="c b">DIETÉTICA LA HOJA</div><div class="c">Nota de pedido</div><div class="c">No válido como factura</div><div class="hr"></div>
+      <div class="r"><span>${d} ${h}</span><span>N° ${ticketNo++}</span></div><div>Atendió: Lucía</div><div class="hr"></div>${rows}<div class="hr"></div>
+      <div class="r big"><span>TOTAL</span><span>${money(t.tot)}</span></div>${paid}
+      ${change > 0 ? `<div class="r"><span>Vuelto</span><span>${money(change)}</span></div>` : ''}<div class="hr"></div><div class="c">¡Gracias por su compra!</div>`;
+    $('#printer').classList.add('on');
+    void rc.offsetWidth; rc.classList.add('out');
+  }
+  function confirmPay(){
+    if (paying || !cart.length) return;
+    let s = showPayState();
+    if (!s.ok){ const st = $('#m-status'); st.classList.remove('shake'); void st.offsetWidth; st.classList.add('shake'); (payInputs.find(i => !i.value) || payInputs[0]).focus({preventScroll:true}); return; }
+    if (s.empty){ setCash(totals().tot); s = payState(); }   // Sin montos: se cobra justo en efectivo, como «Completar».
+    paying = true;
+    printReceipt(payments());
+    setTimeout(() => { closePay(); cart = []; lastAdded = null; render(); paying = false; }, reduced ? 0 : 900);
+  }
+
+  function takeOver(){ auto = false; }
+  document.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
+    takeOver(); if ($('#modal').classList.contains('show')) return; add(b.dataset.add);
+  }));
+  $('#pay').addEventListener('click', () => { takeOver(); openPay(true); });
+  $('#confirm').addEventListener('click', () => { takeOver(); confirmPay(); });
+  payInputs.forEach(i => {
+    i.addEventListener('input', () => { takeOver(); showPayState(); });
+    i.addEventListener('focus', takeOver);
+    i.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); confirmPay(); } });
+  });
+  $('#reset').addEventListener('click', () => { takeOver(); cart = []; closePay(); hideReceipt(); render(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && $('#modal').classList.contains('show')){ takeOver(); closePay(); $('#pay').focus({preventScroll:true}); return; }
+    if (e.key !== 'F8' || !cart.length) return;
+    e.preventDefault(); takeOver();
+    $('#modal').classList.contains('show') ? confirmPay() : openPay(true);
+  });
+
+  async function autoplay(){
+    await wait(900);
+    for (const id of ['yerba','almendras','galletitas']){
+      if (!auto) return;
+      await typeSearch(P[id].q, id); if (!auto) return;
+      add(id); await wait(500);
+    }
+    for (let i = 0; i < 2; i++){ if (!auto) return; await wait(450); add('galletitas'); }
+    await wait(1100); if (!auto) return;
+    $('#pay').classList.add('pressed'); await wait(180); $('#pay').classList.remove('pressed');
+    openPay(); await wait(800); if (!auto) return;
+    setCash(20000); await wait(1300); if (!auto) return;
+    confirmPay();
+  }
+  render();
+  autoplay();
+
+  /* ---------------- Pasos del día (tabs) ---------------- */
+  const tabs = [...document.querySelectorAll('.steps [role=tab]')];
+  function select(tab){
+    tabs.forEach(t => { const on = t === tab; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
+  }
+  tabs.forEach((t,i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return; e.preventDefault(); const n = tabs[(i + d + tabs.length) % tabs.length]; select(n); n.focus();
+    });
+  });
+
+  /* ---------------- Remito ---------------- */
+  const ocrRows = [
+    ['ok','Yerba mate suave 1 kg','12 un.','$ 3.100,00'],
+    ['ok','Almendras peladas','5.000 g','$ 12.900,00'],
+    ['name','Galletitas de arroz','24 un.','$ 690,00'],
+    ['miss','Té rojo x20 (crear artículo)','6 un.','$ 1.450,00']
+  ];
+  $('#read-remito').addEventListener('click', async () => {
+    const paper = $('#paper'), body = $('#ocr-body');
+    body.innerHTML = '<tr class="empty"><td colspan="3">Leyendo…</td></tr>';
+    paper.classList.remove('scanning'); void paper.offsetWidth; paper.classList.add('scanning');
+    await wait(1600);
+    body.innerHTML = '';
+    for (const [cls,a,q,c] of ocrRows){
+      const tr = document.createElement('tr'); tr.className = cls;
+      tr.innerHTML = `<td>${a}</td><td>${q}</td><td>${c}</td>`; body.appendChild(tr); await wait(220);
+    }
+    $('#read-remito').textContent = 'Leer de nuevo';
+  });
+
+  /* ---------------- Promos ---------------- */
+  let promo = '3x2', qty = 3; const unit = 1200;
+  function calcPromo(){
+    let d = 0, label = '';
+    if (promo === '3x2'){ d = Math.floor(qty/3) * unit; label = 'Llevás 3, pagás 2'; }
+    if (promo === '2da'){ d = Math.floor(qty/2) * unit * .5; label = '2.ª unidad al 50%'; }
+    if (promo === 'pct'){ d = Math.round(qty * unit * 15) / 100; label = '15% off'; }
+    $('#q-out').textContent = qty;
+    $('#calc').innerHTML = `<div class="row"><span>${qty} × ${money(unit)}</span><span>${money(qty*unit)}</span></div>
+      <div class="row disc"><span>${label}</span><span>− ${money(d)}</span></div>
+      <div class="row tot"><span>Total</span><span>${money(qty*unit - d)}</span></div>`;
+  }
+  document.querySelectorAll('[data-promo]').forEach(b => b.addEventListener('click', () => {
+    promo = b.dataset.promo; document.querySelectorAll('[data-promo]').forEach(x => x.setAttribute('aria-pressed', x === b)); calcPromo();
+  }));
+  $('#q-minus').addEventListener('click', () => { qty = Math.max(1, qty-1); calcPromo(); });
+  $('#q-plus').addEventListener('click', () => { qty = Math.min(12, qty+1); calcPromo(); });
+  calcPromo();
+
+  /* ---------------- QR de ejemplo ---------------- */
+  (function qr(){
+    const svg = $('#qr'), N = 25; let s = 7, out = '';
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    const finder = (x,y) => { for (let i=0;i<7;i++) for (let j=0;j<7;j++){ const edge = i===0||j===0||i===6||j===6, core = i>1&&i<5&&j>1&&j<5; if (edge||core) out += `<rect x="${x+i}" y="${y+j}" width="1" height="1"/>`; } };
+    const inFinder = (i,j) => (i<8&&j<8)||(i>=N-8&&j<8)||(i<8&&j>=N-8);
+    for (let i=0;i<N;i++) for (let j=0;j<N;j++) if (!inFinder(i,j) && rnd() > .52) out += `<rect x="${i}" y="${j}" width="1" height="1"/>`;
+    finder(0,0); finder(N-7,0); finder(0,N-7);
+    svg.innerHTML = `<g fill="#222">${out}</g>`;
+  })();
+
+  /* ---------------- Estadísticas ---------------- */
+  const DATA = {
+    hora:{fmt:v=>'$'+Math.round(v/1000)+'k',rows:[['9 h',18e3],['10 h',31e3],['11 h',52e3],['12 h',61e3],['13 h',22e3],['17 h',47e3],['18 h',78e3],['19 h',69e3],['20 h',34e3]],note:'Entre las 18 y las 20 h se vende un tercio del día: buen horario para reforzar el mostrador.'},
+    pago:{fmt:v=>v+'%',rows:[['Efectivo',39],['Débito',27],['Crédito',15],['Transferencia',19]],note:'Más de la mitad de lo vendido entra por medios electrónicos.'},
+    top:{fmt:v=>v+' un.',rows:[['Yerba 1 kg',142],['Galletitas',118],['Almendras',96],['Avena',81],['Mix frutos',64],['Té rojo',40]],note:'Los artículos más vendidos del mes, para no quedarte nunca sin stock.'}
+  };
+  function drawStats(k){
+    const d = DATA[k], max = Math.max(...d.rows.map(r=>r[1])), bars = $('#bars');
+    bars.innerHTML = d.rows.map(([l,v]) => `<div class="bar${v===max?' top':''}"><b>${d.fmt(v)}</b><i style="height:0"></i><em>${l}</em></div>`).join('');
+    bars.setAttribute('aria-label', 'Gráfico: ' + d.rows.map(([l,v]) => l + ' ' + d.fmt(v)).join(', '));
+    requestAnimationFrame(() => requestAnimationFrame(() => bars.querySelectorAll('.bar').forEach((b,i) => b.querySelector('i').style.height = (d.rows[i][1]/max*82) + '%')));
+    $('#stats-note').textContent = d.note;
+  }
+  document.querySelectorAll('[data-stat]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-stat]').forEach(x => x.setAttribute('aria-pressed', x === b)); drawStats(b.dataset.stat);
+  }));
+  drawStats('hora');
+
+  /* ---------------- Permisos por cuenta ---------------- */
+  const PERMS = [
+    ['articles','Artículos y precios','Artículos, precios, rubros, combos y promociones.'],
+    ['stock','Ajustar stock','Cargas y ajustes manuales de stock.'],
+    ['suppliers','Proveedores e ingresos','Proveedores, ingresos de mercadería y remitos.'],
+    ['cash','Corregir caja','Editar o cancelar cierres y movimientos.'],
+    ['void','Anular ventas','Anular ventas y emitir su nota de crédito.'],
+    ['stats','Ver estadísticas','Indicadores y evolución de las ventas.'],
+    ['sellers','Vendedores','Alta y baja de las personas que atienden.']
+  ];
+  const ACC = {
+    enc:{name:'Martín', on:new Set(['articles','stock','suppliers','cash'])},
+    mos:{name:'Mostrador', on:new Set()}
+  };
+  let acc = 'enc';
+  function drawPerms(){
+    const a = ACC[acc], on = a.on;
+    $('#perm-title').textContent = 'Qué puede hacer ' + a.name;
+    $('#checks').innerHTML = PERMS.map(([k,l,h]) =>
+      `<label class="check"><input type="checkbox" data-perm="${k}"${on.has(k)?' checked':''}><div><b>${l}</b><span>${h}</span></div></label>`).join('');
+    $('#checks').querySelectorAll('input').forEach(i => i.addEventListener('change', () => { i.checked ? on.add(i.dataset.perm) : on.delete(i.dataset.perm); drawTiles(); }));
+    drawTiles();
+  }
+  function drawTiles(){
+    const on = ACC[acc].on, has = k => on.has(k);
+    const tiles = [
+      ['Caja','Vender, abrir y cerrar', true],
+      ['Resumen de ventas','Tickets del día', true],
+      ['Artículos', has('articles') && has('stock') ? 'Precios y stock' : has('articles') ? 'Precios y promos' : 'Ajustes de stock', has('articles') || has('stock')],
+      ['Proveedores','Ingresos y remitos', has('suppliers')],
+      ['Vendedores','Quién atiende', has('sellers')],
+      ['Estadísticas','Gráficos de ventas', has('stats')]
+    ];
+    $('#tiles').innerHTML = tiles.filter(t => t[2]).map(([t,s]) => `<div class="tile">${t}<small>${s}</small></div>`).join('')
+      + `<div class="tile lock">Configuración<small>Solo el administrador</small></div>`;
+    const ex = [];
+    if (has('cash')) ex.push('Corrige cierres');
+    if (has('void')) ex.push('Anula ventas');
+    $('#extras').innerHTML = ex.map(e => `<span>${e}</span>`).join('');
+  }
+  document.querySelectorAll('[data-acc]').forEach(b => b.addEventListener('click', () => {
+    acc = b.dataset.acc; document.querySelectorAll('[data-acc]').forEach(x => x.setAttribute('aria-pressed', x === b)); drawPerms();
+  }));
+  drawPerms();
+})();
+</script>
+</body>
+</html>
