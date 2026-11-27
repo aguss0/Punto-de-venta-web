@@ -124,10 +124,35 @@ p{margin:0}
 @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 @media (prefers-reduced-motion:reduce){.status.shake{animation:none}}
 .modal-card .pay-btn{width:100%}
-.demo-hint{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px;font-size:.9rem;color:#C4DCCF}
-.chip{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;font:700 .85rem var(--body);cursor:pointer}
-.chip:hover{background:rgba(255,255,255,.2)}
-.chip.reset{background:transparent;border-style:dashed}
+/* Panel "Ahora probala vos" */
+.try{margin-top:22px;background:var(--forest-2);border:2px solid rgba(245,213,71,.55);border-radius:16px;padding:20px 22px 22px;color:#fff;position:relative}
+.try-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.try-head h2{font-size:1.6rem;max-width:none;color:#fff;letter-spacing:-.02em}
+.try-head p{font-size:.92rem;color:#B5D2C2;margin-top:4px}
+.try-reset{flex:none;background:transparent;color:#CFE3D8;border:1px dashed rgba(255,255,255,.35);border-radius:8px;padding:7px 12px;font:700 .85rem var(--body);cursor:pointer}
+.try-reset:hover{color:#fff;border-color:#fff}
+.try-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;padding:0;list-style:none}
+.try-steps li{display:flex;align-items:center;gap:9px;font-size:.9rem;line-height:1.2;color:#8FB3A1;padding:9px 10px;border-radius:10px;background:rgba(255,255,255,.04);transition:background .25s,color .25s}
+.try-steps .n{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2px solid currentColor;font:800 .85rem var(--display)}
+.try-steps li.on{background:rgba(245,213,71,.14);color:#fff}
+.try-steps li.on .n{background:var(--tag);border-color:var(--tag);color:var(--forest)}
+.try-steps li.done{color:#CFE3D8}
+.try-steps li.done .n{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.prods{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.prod{display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.16);cursor:pointer;background:rgba(255,255,255,.06);color:#fff;text-align:left;
+  font:700 .9rem/1.2 var(--body);padding:8px 12px 8px 8px;border-radius:10px;transition:background .15s,border-color .15s}
+.prod::before{content:"+";flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:7px;background:var(--tag);color:var(--forest);font:800 1rem/1 var(--display)}
+.prod b{margin-left:auto;font-weight:700;color:var(--tag);font-variant-numeric:tabular-nums;white-space:nowrap}
+.prod small{background:var(--tag);color:var(--tag-ink);font-size:.68rem;padding:1px 5px;border-radius:4px}
+.prod:hover{background:rgba(255,255,255,.12);border-color:rgba(245,213,71,.6)}
+.prod:active{background:rgba(245,213,71,.18)}
+.try.your-turn .prod{animation:tagPulse 1.2s ease-in-out 3}
+.try.your-turn .prod:nth-child(2){animation-delay:.1s}.try.your-turn .prod:nth-child(3){animation-delay:.2s}.try.your-turn .prod:nth-child(4){animation-delay:.3s}
+@keyframes tagPulse{0%,100%{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.06)}45%{border-color:var(--tag);background:rgba(245,213,71,.16)}}
+.pay-btn.glow{animation:payGlow 1.2s ease-in-out infinite}
+@keyframes payGlow{0%,100%{box-shadow:0 0 0 0 rgba(245,213,71,.9)}50%{box-shadow:0 0 0 7px rgba(245,213,71,0)}}
+@media (hover:none) and (pointer:coarse){.only-kb{display:none}}
+@media (max-width:640px){.prods{grid-template-columns:1fr}.try-steps{grid-template-columns:1fr}.try{padding:16px}}
 kbd{font-family:var(--mono);font-size:.8em;background:rgba(255,255,255,.14);border-radius:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.25)}
 
 /* ---------- El ticket (pieza estrella) ---------- */
@@ -135,7 +160,7 @@ kbd{font-family:var(--mono);font-size:.8em;background:rgba(255,255,255,.14);bord
 .printer{position:absolute;right:-30px;top:118px;width:262px;z-index:6;pointer-events:none;opacity:0;transition:opacity .25s}
 .printer.on{opacity:1;pointer-events:auto}
 .printer-slot{height:14px;background:#0A2A1F;border-radius:7px;box-shadow:inset 0 3px 4px rgba(0,0,0,.6)}
-.demo-hint{padding-right:250px}
+@media (min-width:981px){.printer{top:44px}}
 .receipt-clip{overflow:hidden;margin:-7px 12px 0;}
 .receipt{background:#fff;color:#222;font:400 11px/1.45 var(--mono);padding:16px 14px 22px;transform:translateY(-102%);transition:transform 2.2s steps(22,end);position:relative;
   -webkit-mask:radial-gradient(circle at 6px 100%,transparent 5px,#000 5.5px) 0 0/12px 100% repeat-x;
@@ -147,7 +172,7 @@ kbd{font-family:var(--mono);font-size:.8em;background:rgba(255,255,255,.14);bord
 .receipt .r{display:flex;justify-content:space-between;gap:6px}
 .receipt .big{font-size:14px;font-weight:700}
 @media (max-width:1240px){.printer{right:-8px}}
-@media (max-width:980px){.printer{position:relative;right:auto;top:auto;margin:-10px auto 0;display:none}.printer.on{display:block}.demo-hint{padding-right:0}}
+@media (max-width:980px){.printer{position:relative;right:auto;top:auto;margin:-10px auto 0;display:none}.printer.on{display:block}}
 @media (max-width:560px){.win-body{grid-template-columns:1fr}.win{font-size:14px}}
 
 /* ---------- Secciones ---------- */
@@ -195,10 +220,10 @@ section{padding:110px 0}
 @media (max-width:900px){.feat{grid-template-columns:1fr;gap:32px}.feat.flip > :first-child{order:0}}
 
 /* Remito */
-.ocr{display:grid;grid-template-columns:.75fr 1.25fr;gap:16px;align-items:start}
+.ocr{display:grid;grid-template-columns:.85fr 1.15fr;gap:16px;align-items:start}
 .grid-ocr td:not(:first-child),.grid-ocr th:not(:first-child){white-space:nowrap;text-align:right}
 @media (max-width:560px){.ocr{grid-template-columns:1fr}}
-.paper{background:#FFFEF7;border:1px solid #E6E2CF;border-radius:6px;padding:14px;font:400 12px/1.6 var(--mono);color:#3A3A3A;transform:rotate(-2.2deg);position:relative;overflow:hidden;box-shadow:0 10px 20px -12px rgba(0,0,0,.3)}
+.paper{background:#FFFEF7;border:1px solid #E6E2CF;border-radius:6px;padding:14px 12px;font:400 11px/1.65 var(--mono);white-space:nowrap;color:#3A3A3A;transform:rotate(-2.2deg);position:relative;overflow:hidden;box-shadow:0 10px 20px -12px rgba(0,0,0,.3)}
 .paper .h{font-weight:700;border-bottom:1px solid #CCC;margin-bottom:6px}
 .scanline{position:absolute;left:0;right:0;height:3px;background:var(--leaf);box-shadow:0 0 14px 4px rgba(31,122,87,.5);top:-10px;opacity:0}
 .paper.scanning .scanline{animation:scan 1.6s ease-in-out forwards}
@@ -308,6 +333,42 @@ h2{text-wrap:balance}
 footer{background:var(--forest-2);color:#9FBFAF;padding:36px 0;font-size:.9rem}
 footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 
+/* ---------- Etiqueta flotante "Pedir una demo" ---------- */
+.fdemo{position:fixed;right:28px;bottom:26px;z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:12px;transform:translateY(160%);transition:transform .4s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.fdemo.show{transform:none}
+.fdemo.show > *{pointer-events:auto}
+.fdemo-tag{position:relative;border:0;cursor:pointer;background:var(--tag);color:var(--tag-ink);font:700 1.02rem/1.15 var(--body);text-align:left;
+  padding:13px 20px 13px 38px;clip-path:polygon(18px 0,100% 0,100% 100%,18px 100%,0 50%);border-radius:0 10px 10px 0;
+  transform:rotate(-4deg);transform-origin:8px 50%;filter:drop-shadow(0 10px 14px rgba(11,58,43,.35))}
+.fdemo-tag::before{content:"";position:absolute;left:16px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--forest)}
+.fdemo-tag small{display:block;font-weight:400;font-size:.8rem;opacity:.8}
+.fdemo-tag:hover{transform:rotate(-1deg)}
+.fdemo-tag.swing{animation:swing 1.3s ease-in-out}
+@keyframes swing{0%{transform:rotate(-4deg)}20%{transform:rotate(9deg)}40%{transform:rotate(-10deg)}60%{transform:rotate(5deg)}80%{transform:rotate(-6deg)}100%{transform:rotate(-4deg)}}
+.fdemo-bubble{background:var(--forest);color:#fff;border-radius:12px;padding:12px 16px;max-width:260px;font-size:.95rem;box-shadow:0 14px 30px -12px rgba(0,0,0,.4);position:relative;opacity:0;transform:translateY(8px);transition:opacity .3s, transform .3s;pointer-events:none}
+.fdemo-bubble::after{content:"";position:absolute;right:34px;bottom:-7px;width:14px;height:14px;background:var(--forest);transform:rotate(45deg)}
+.fdemo-bubble.on{opacity:1;transform:none;pointer-events:auto}
+.fdemo-card{background:#fff;color:var(--ink);border-radius:16px;padding:22px;width:300px;box-shadow:0 24px 50px -16px rgba(11,58,43,.5);border:1px solid var(--mint-2);position:relative}
+.fdemo-card[hidden]{display:none}
+.fdemo-card h3{font-size:1.3rem;color:var(--forest);padding-right:28px}
+.fdemo-card p{font-size:.92rem;color:var(--ink-2);margin:8px 0 16px}
+.fdemo-card .btn{width:100%;justify-content:center;font-size:.98rem;padding:.85em 1em}
+.fdemo-card .btn + .btn{margin-top:8px}
+.fdemo-card .wa{background:var(--forest);color:#fff}
+.fdemo-card .wa:hover{background:var(--leaf)}
+.fdemo-card .btn-ghost{color:var(--forest)}
+.fdemo-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border:0;border-radius:8px;background:var(--mint);color:var(--forest);font:700 1.1rem var(--body);cursor:pointer}
+@media (max-width:640px){
+  .fdemo{left:12px;right:12px;bottom:12px;align-items:stretch}
+  .fdemo-tag{transform:none;clip-path:none;border-radius:12px;padding:14px 18px 14px 36px}
+  .fdemo-tag:hover{transform:none}
+  .fdemo-tag.swing{animation:nudge .9s ease-in-out}
+  .fdemo-card{width:auto}
+  .fdemo-bubble{max-width:none}
+  footer{padding-bottom:96px}
+}
+@keyframes nudge{0%,100%{transform:none}25%{transform:translateY(-6px)}50%{transform:none}75%{transform:translateY(-3px)}}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
 }
@@ -398,14 +459,25 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
       </div>
       </div>
 
-      <div class="demo-hint">
-        <span>Probala:</span>
-        <button class="chip" data-add="yerba">Yerba 1 kg</button>
-        <button class="chip" data-add="almendras">Almendras</button>
-        <button class="chip" data-add="galletitas">Galletitas 3×2</button>
-        <button class="chip" data-add="aceite">Aceite de oliva</button>
-        <span>y apretá <kbd>F8</kbd></span>
-        <button class="chip reset" id="reset">Nueva venta</button>
+      <div class="try" id="try" aria-labelledby="try-title">
+        <div class="try-head">
+          <div>
+            <h2 id="try-title">Ahora probala vos</h2>
+            <p id="try-sub">Es la misma caja del programa, con productos de ejemplo.</p>
+          </div>
+          <button class="try-reset" id="reset">Nueva venta</button>
+        </div>
+        <ol class="try-steps" aria-label="Pasos de la venta">
+          <li id="st1" class="on"><span class="n">1</span>Tocá los productos</li>
+          <li id="st2"><span class="n">2</span><span>Cobrá con el botón<span class="only-kb"> o <kbd>F8</kbd></span></span></li>
+          <li id="st3"><span class="n">3</span>Mirá salir el ticket</li>
+        </ol>
+        <div class="prods" role="group" aria-label="Agregar productos a la venta">
+          <button class="prod" data-add="yerba">Yerba 1 kg<b>$ 4.850</b></button>
+          <button class="prod" data-add="almendras">Almendras 250 g<b>$ 4.600</b></button>
+          <button class="prod" data-add="galletitas">Galletitas<small>3×2</small><b>$ 1.200</b></button>
+          <button class="prod" data-add="aceite">Aceite de oliva<b>$ 9.300</b></button>
+        </div>
       </div>
     </div>
   </div>
@@ -723,6 +795,18 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 </section>
 </main>
 
+<aside class="fdemo" id="fdemo" aria-label="Pedir una demo">
+  <div class="fdemo-bubble" id="fdemo-bubble" role="status"></div>
+  <div class="fdemo-card" id="fdemo-card" hidden>
+    <button class="fdemo-close" id="fdemo-close" aria-label="Cerrar">×</button>
+    <h3>Probalo con tus productos</h3>
+    <p>Te lo instalamos y cargamos tus artículos desde tu planilla. Escribinos y coordinamos.</p>
+    <a class="btn wa" href="https://wa.me/5493512106126?text=Hola%2C%20quiero%20una%20demo%20del%20Punto%20de%20Venta">Escribinos por WhatsApp</a>
+    <a class="btn btn-ghost" href="mailto:agustinicolassanchez@gmail.com?subject=Demo%20Punto%20de%20Venta">Escribinos por mail</a>
+  </div>
+  <button class="fdemo-tag" id="fdemo-tag" aria-expanded="false" aria-controls="fdemo-card">Pedir una demo<small>Te respondemos por WhatsApp</small></button>
+</aside>
+
 <footer>
   <div class="wrap">
     <span>Punto de Venta · Sistema de caja para Windows</span>
@@ -744,7 +828,13 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     galletitas:{name:'Galletitas de arroz',short:'Galletitas',price:1200,kind:'u',step:1,promo:'3x2',q:'galle'},
     aceite:{name:'Aceite de oliva 500 ml',short:'Aceite oliva',price:9300,kind:'u',step:1,q:'aceite'}
   };
-  let cart = [], lastAdded = null, auto = true, ticketNo = 1234, busy = false;
+  let cart = [], lastAdded = null, auto = true, ticketNo = 1234, busy = false, printed = false;
+  // Marca en el panel "Ahora probala vos" en qué paso de la venta está.
+  function syncSteps(){
+    const step = cart.length ? 2 : printed ? 3 : 1;
+    [1,2,3].forEach(n => { const li = $('#st' + n); li.classList.toggle('on', n === step); li.classList.toggle('done', n < step); });
+    $('#pay').classList.toggle('glow', step === 2 && !auto);
+  }
 
   const lineTotal = l => { const p = P[l.id]; return p.kind === 'g' ? Math.round(p.price * l.qty / 10) / 100 : p.price * l.qty; };
   const lineDisc  = l => { const p = P[l.id]; return p.promo === '3x2' ? Math.floor(l.qty / 3) * p.price : 0; };
@@ -766,6 +856,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     $('#disc').textContent = money(t.d);
     $('#total').textContent = money(t.tot);
     $('#pay').disabled = !cart.length;
+    syncSteps();
   }
 
   function add(id){
@@ -773,7 +864,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     if (l) l.qty += P[id].step; else cart.push({id, qty:P[id].step});
     lastAdded = id; hideReceipt(); render();
   }
-  function hideReceipt(){ $('#receipt').classList.remove('out'); $('#printer').classList.remove('on'); }
+  function hideReceipt(){ $('#receipt').classList.remove('out'); $('#printer').classList.remove('on'); printed = false; syncSteps(); }
 
   async function typeSearch(text, id){
     const el = $('#typed'); el.textContent = '';
@@ -833,7 +924,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
       <div class="r"><span>${d} ${h}</span><span>N° ${ticketNo++}</span></div><div>Atendió: Lucía</div><div class="hr"></div>${rows}<div class="hr"></div>
       <div class="r big"><span>TOTAL</span><span>${money(t.tot)}</span></div>${paid}
       ${change > 0 ? `<div class="r"><span>Vuelto</span><span>${money(change)}</span></div>` : ''}<div class="hr"></div><div class="c">¡Gracias por su compra!</div>`;
-    $('#printer').classList.add('on');
+    $('#printer').classList.add('on'); printed = true;
     void rc.offsetWidth; rc.classList.add('out');
   }
   function confirmPay(){
@@ -843,10 +934,16 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     if (s.empty){ setCash(totals().tot); s = payState(); }   // Sin montos: se cobra justo en efectivo, como «Completar».
     paying = true;
     printReceipt(payments());
+    if (!auto) setTimeout(() => window.nudgeDemo && window.nudgeDemo('¿Viste qué rápido? Probalo con tus productos.'), reduced ? 0 : 4000);
     setTimeout(() => { closePay(); cart = []; lastAdded = null; render(); paying = false; }, reduced ? 0 : 900);
   }
 
-  function takeOver(){ auto = false; }
+  function takeOver(){
+    if (!auto) return;
+    auto = false; $('#try').classList.remove('your-turn');
+    $('#try-sub').textContent = 'Es la misma caja del programa, con productos de ejemplo.';
+    syncSteps();
+  }
   document.querySelectorAll('[data-add]').forEach(b => b.addEventListener('click', () => {
     takeOver(); if ($('#modal').classList.contains('show')) return; add(b.dataset.add);
   }));
@@ -878,6 +975,9 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     openPay(); await wait(800); if (!auto) return;
     setCash(20000); await wait(1300); if (!auto) return;
     confirmPay();
+    await wait(3000); if (!auto) return;
+    $('#try-sub').textContent = 'Tu turno: tocá un producto para empezar una venta.';
+    $('#try').classList.add('your-turn');
   }
   render();
   autoplay();
@@ -1007,6 +1107,34 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
     acc = b.dataset.acc; document.querySelectorAll('[data-acc]').forEach(x => x.setAttribute('aria-pressed', x === b)); drawPerms();
   }));
   drawPerms();
+
+  /* ---------------- Etiqueta flotante "Pedir una demo" ---------------- */
+  const fd = $('#fdemo'), tag = $('#fdemo-tag'), card = $('#fdemo-card'), bubble = $('#fdemo-bubble');
+  let heroIn = true, ctaIn = false, nudged = false, bubbleTimer;
+  const syncFd = () => {
+    const show = !heroIn && !ctaIn;
+    fd.classList.toggle('show', show);
+    if (!show) setOpen(false);
+  };
+  function setOpen(open){
+    card.hidden = !open; tag.setAttribute('aria-expanded', open);
+    if (open){ bubble.classList.remove('on'); card.querySelector('.wa').focus({preventScroll:true}); }
+  }
+  tag.addEventListener('click', () => setOpen(card.hidden));
+  $('#fdemo-close').addEventListener('click', () => { setOpen(false); tag.focus(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !card.hidden){ setOpen(false); tag.focus(); } });
+  document.addEventListener('click', e => { if (!card.hidden && !fd.contains(e.target)) setOpen(false); });
+  new IntersectionObserver(([e]) => { heroIn = e.isIntersecting; syncFd(); }, {threshold:.15}).observe($('.hero'));
+  new IntersectionObserver(([e]) => { ctaIn = e.isIntersecting; syncFd(); }).observe($('#contacto'));
+  // Una sola vez por visita, después de que la persona probó algo por su cuenta.
+  window.nudgeDemo = text => {
+    if (nudged || !card.hidden) return; nudged = true;
+    heroIn = false; syncFd();   // se muestra aunque el hero siga a la vista
+    bubble.textContent = text; bubble.classList.add('on');
+    tag.classList.remove('swing'); void tag.offsetWidth; tag.classList.add('swing');
+    clearTimeout(bubbleTimer); bubbleTimer = setTimeout(() => bubble.classList.remove('on'), 7000);
+  };
+  bubble.addEventListener('click', () => setOpen(true));
 })();
 </script>
 </body>
